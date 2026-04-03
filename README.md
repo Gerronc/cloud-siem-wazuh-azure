@@ -227,6 +227,9 @@ Within seconds of detection, Wazuh executed the firewall-drop active response on
 <img src="https://i.imgur.com/AKFHPXN.png" height="85%" width="85%" alt="Active Response Rules"/>
 </p>
 
+<p align="center">
+<img src="https://i.imgur.com/LZOw1JL.png" height="85%" width="85%" alt="Active Response Rules"/>
+</p>
 ---
 
 ## Key Takeaways
