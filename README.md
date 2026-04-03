@@ -262,7 +262,7 @@ Within seconds of detection, Wazuh executed the firewall-drop active response on
 | Standard_D2s_v3 (wazuh-endpoint) | Demo period only | ~$15 |
 | **Total** | | **~$30 USD** |
 
-Both VMs were deleted immediately after the demonstration to preserve Azure for Students credits.
+
 
 ---
 
