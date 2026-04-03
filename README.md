@@ -32,7 +32,7 @@ This project was built as part of the **CloudGuard GD** concept — a managed cl
 │                                                         │
 │  ┌──────────────────────┐    ┌──────────────────────┐  │
 │  │   wazuh-server        │    │   wazuh-endpoint      │  │
-│  │   Standard_B2s        │    │   Standard_B1s        │  │
+│  │   Standard_D2s_v3     │    │   Standard_D2s_v3     │  │
 │  │   Ubuntu 22.04 LTS    │    │   Ubuntu 22.04 LTS    │  │
 │  │   10.0.0.4            │    │   10.1.0.4            │  │
 │  │                       │    │                       │  │
@@ -58,8 +58,8 @@ This project was built as part of the **CloudGuard GD** concept — a managed cl
 | Cloud Platform | Microsoft Azure (Azure for Students — $100 credit) |
 | SIEM | Wazuh 4.7.5 (Manager, Indexer, Dashboard) |
 | OS | Ubuntu 22.04.5 LTS |
-| VM — Server | Standard_B2s (2 vCPUs, 4 GB RAM) |
-| VM — Endpoint | Standard_B1s (1 vCPU, 1 GB RAM) |
+| VM — Server | Standard_D2s_v3 (2 vCPUs, 8 GB RAM) |
+| VM — Endpoint | Standard_D2s_v3 (2 vCPUs, 8 GB RAM) |
 | Detection Rules | Wazuh rules 5710, 5763 |
 | Response | Wazuh firewall-drop active response (iptables) |
 | MITRE ATT&CK | T1110.001 — Brute Force: Password Guessing |
@@ -73,14 +73,16 @@ This project was built as part of the **CloudGuard GD** concept — a managed cl
 Two Ubuntu 22.04 LTS VMs were created in the Azure portal.
 
 **wazuh-server** configuration:
-- Size: Standard_B2s (minimum 4 GB RAM required for Wazuh indexer)
+- Size: Standard_D2s_v3 (2 vCPUs, 8 GB RAM)
 - NSG inbound rules: 22 (SSH), 443 (Dashboard), 1514 (Agent events), 1515 (Agent registration)
 
 **wazuh-endpoint** configuration:
-- Size: Standard_B1s
+- Size: Standard_D2s_v3 (2 vCPUs, 8 GB RAM)
 - NSG inbound rules: 22 (SSH)
 
-> **Why B2s for the server?** Wazuh runs three services simultaneously — the manager, indexer, and dashboard. The indexer is memory-intensive. Anything below 4 GB RAM causes silent failures or dashboard crashes under load.
+> **Why D2s_v3?** Wazuh runs three services simultaneously — the manager, indexer, and dashboard. The indexer is memory-intensive and requires a minimum of 4 GB RAM. The D2s_v3 provides 8 GB, giving comfortable headroom for stable operation.
+
+![Azure VMs Running](screenshots/VM_spng.png)
 
 ---
 
@@ -111,6 +113,8 @@ Navigate to `https://<wazuh-server-public-ip>` in a browser. Accept the self-sig
 
 **Screenshot 1:** Wazuh dashboard overview — confirm the UI is accessible and the manager is running.
 
+![Wazuh Overview](screenshots/Wazuh_overview.png)
+
 ---
 
 ### Phase 4 — Enroll the Endpoint Agent
@@ -140,6 +144,8 @@ sudo /var/ossec/bin/agent-auth -m <server-public-ip>
 
 **Screenshot 2:** Agents page showing wazuh-endpoint with Active (green) status.
 
+![Wazuh Agents](screenshots/Wazuh_agents.png)
+
 ---
 
 ### Phase 5 — Configure Active Response
@@ -167,6 +173,8 @@ sudo systemctl restart wazuh-manager
 - **5710** — SSH attempt using a non-existent username (fires on each individual attempt)
 - **5763** — Multiple consecutive authentication failures from the same IP (aggregated pattern)
 - **timeout: 180** — Block lifted automatically after 3 minutes to prevent permanent lockouts
+
+![Active Response Config](screenshots/Terminal.png)
 
 ---
 
@@ -198,11 +206,15 @@ Wazuh detected the brute-force attempts within seconds, classifying them under:
 
 **Screenshot 3:** Security Events showing rule 5710 alerts with MITRE ATT&CK tags.
 
+![Security Events](screenshots/Security_events.png)
+
 ### Automated Response
 
 Within seconds of detection, Wazuh executed the firewall-drop active response on the endpoint, blocking the attacking IP via iptables with zero manual intervention.
 
-**Screenshot 4:** Security Events showing "Host Blocked by firewall-drop Active Response" alert (rule 651).
+**Screenshot 4:** Security Events showing "Host Blocked by firewall-drop Active Response" alert (rule 651) — including the full block/unblock cycle across multiple attack simulations.
+
+![Active Response Rules](screenshots/Rules.png)
 
 ---
 
@@ -235,9 +247,9 @@ Within seconds of detection, Wazuh executed the firewall-drop active response on
 
 | Resource | Duration | Estimated Cost (USD) |
 |---|---|---|
-| Standard_B2s (wazuh-server) | Demo period only | ~$8 |
-| Standard_B1s (wazuh-endpoint) | Demo period only | ~$2 |
-| **Total** | | **~$10 USD** |
+| Standard_D2s_v3 (wazuh-server) | Demo period only | ~$15 |
+| Standard_D2s_v3 (wazuh-endpoint) | Demo period only | ~$15 |
+| **Total** | | **~$30 USD** |
 
 Both VMs were deleted immediately after the demonstration to preserve Azure for Students credits.
 
