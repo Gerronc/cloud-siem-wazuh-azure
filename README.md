@@ -82,7 +82,9 @@ Two Ubuntu 22.04 LTS VMs were created in the Azure portal.
 
 > **Why D2s_v3?** Wazuh runs three services simultaneously — the manager, indexer, and dashboard. The indexer is memory-intensive and requires a minimum of 4 GB RAM. The D2s_v3 provides 8 GB, giving comfortable headroom for stable operation.
 
-![Azure VMs Running](screenshots/VM_spng.png)
+<p align="center">
+<img src="https://i.imgur.com/TlW9JTi.png" height="85%" width="85%" alt="Azure VM's running"/>
+</p>
 
 ---
 
@@ -113,8 +115,10 @@ Navigate to `https://<wazuh-server-public-ip>` in a browser. Accept the self-sig
 
 **Screenshot 1:** Wazuh dashboard overview — confirm the UI is accessible and the manager is running.
 
-![Wazuh Overview](screenshots/Wazuh_overview.png)
 
+<p align="center">
+<img src="https://i.imgur.com/qrG6jUB.png" height="85%" width="85%" alt="Wazuh Overview"/>
+</p>
 ---
 
 ### Phase 4 — Enroll the Endpoint Agent
@@ -144,8 +148,10 @@ sudo /var/ossec/bin/agent-auth -m <server-public-ip>
 
 **Screenshot 2:** Agents page showing wazuh-endpoint with Active (green) status.
 
-![Wazuh Agents](screenshots/Wazuh_agents.png)
 
+<p align="center">
+<img src="https://i.imgur.com/MuiEhKw.png" height="85%" width="85%" alt="azuh Agents"/>
+</p>
 ---
 
 ### Phase 5 — Configure Active Response
@@ -174,7 +180,11 @@ sudo systemctl restart wazuh-manager
 - **5763** — Multiple consecutive authentication failures from the same IP (aggregated pattern)
 - **timeout: 180** — Block lifted automatically after 3 minutes to prevent permanent lockouts
 
-![Active Response Config](screenshots/Terminal.png)
+![](screenshots/Terminal.png)
+
+<p align="center">
+<img src="https://i.imgur.com/g6zQbiM.png" height="85%" width="85%" alt="Active Response Config"/>
+</p>
 
 ---
 
@@ -204,17 +214,18 @@ Wazuh detected the brute-force attempts within seconds, classifying them under:
 | MITRE Technique | T1110.001 — Brute Force: Password Guessing |
 | Rule Level | 5 |
 
-**Screenshot 3:** Security Events showing rule 5710 alerts with MITRE ATT&CK tags.
 
-![Security Events](screenshots/Security_events.png)
 
 ### Automated Response
 
 Within seconds of detection, Wazuh executed the firewall-drop active response on the endpoint, blocking the attacking IP via iptables with zero manual intervention.
 
-**Screenshot 4:** Security Events showing "Host Blocked by firewall-drop Active Response" alert (rule 651) — including the full block/unblock cycle across multiple attack simulations.
+**Screenshot 3:** Security Events showing "Host Blocked by firewall-drop Active Response" alert (rule 651) — including the full block/unblock cycle across multiple attack simulations.
 
-![Active Response Rules](screenshots/Rules.png)
+
+<p align="center">
+<img src="https://i.imgur.com/AKFHPXN.png" height="85%" width="85%" alt="Active Response Rules"/>
+</p>
 
 ---
 
